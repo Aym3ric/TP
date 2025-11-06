@@ -1,29 +1,37 @@
-from IDataTransformer import IDataTransformer
 import pandas as pd
-from typing import List
+from IDataTransformer import IDataTransformer
 from Metrique import Metrique
+from typing import List
 
 class DataTransformer(IDataTransformer):
-    def transform(self, df: pd.DataFrame) -> list:
-        df['heure_de_paris'] = pd.to_datetime(df['heure_de_paris'], errors='coerce')
+    
+    def transform(self, df: pd.DataFrame) -> List[Metrique]:
+        DATE_COL = 'heure_utc'
+        TEMP_COL = 'temperature'
+        HUMID_COL = 'humidite'
+        PRESS_COL = 'pression'
 
-        df['temperature'] = pd.to_numeric(df['temperature'], errors='coerce')
-        df['humidite'] = pd.to_numeric(df['humidite'], errors='coerce')
-        df['pression'] = pd.to_numeric(df['pression'], errors='coerce')
+        required_cols = [DATE_COL, TEMP_COL, HUMID_COL, PRESS_COL]
+        if not all(col in df.columns for col in required_cols):
+            print(f"Colonnes manquantes. {required_cols} sont requises.")
+            print(f"Colonnes trouvées: {list(df.columns)}")
+            return []
 
-        df['temperature'] = df['temperature'].fillna(df['temperature'].mean())
-        df['humidite'] = df['humidite'].fillna(df['humidite'].mean()).astype(int)
-        df['pression'] = df['pression'].fillna(df['pression'].mean()).astype(int)
+        df[DATE_COL] = pd.to_datetime(df[DATE_COL], errors='coerce')
+        df = df.dropna(subset=[DATE_COL])
+        df = df.sort_values(by=DATE_COL, ascending=True)
 
-        # Création des objets Metrique
-        metriques = [
-            Metrique(
-                date=row['heure_de_paris'].isoformat(),
-                temperature=row['temperature'],
-                humidite=int(row['humidite']),
-                pression=int(row['pression'])
-            )
-            for _, row in df.iterrows()
-        ]
+        metriques = []
+        for index, row in df.iterrows():
+            try:
+                metrique = Metrique(
+                    date=row[DATE_COL],
+                    temperature=float(row[TEMP_COL]),
+                    humidite=float(row[HUMID_COL]),
+                    pression=float(row[PRESS_COL])
+                )
+                metriques.append(metrique)
+            except ValueError as e:
+                print(f"Alerte: Ligne ignorée, donnée invalide : {e}")
 
         return metriques
