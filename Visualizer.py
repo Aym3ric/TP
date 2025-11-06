@@ -2,6 +2,8 @@ from Metrique import Metrique
 from typing import List
 from Ville import Ville
 from Station import Station
+from MetriqueDisplayDecorator import MetriqueDisplayDecorator
+from StationDisplayDecorator import StationDisplayDecorator
 
 class Visualizer:
     def __init__(self):
@@ -28,18 +30,21 @@ class Visualizer:
     def choice_station(self, ville: Ville) -> Station:
         available_names = {s.nom.lower(): s for s in ville.stations}
         
-        print(f"Stations disponibles pour {ville.nom}: {', '.join([s.nom for s in ville.stations])}")
+        station_names = [StationDisplayDecorator(s).show() for s in ville.stations]
+        print(f"Stations disponibles pour {ville.nom}: {', '.join(station_names)}")
 
         while True:
             response = input("Station : ").lower()
             if response in available_names:
                 return available_names[response]
-            print(f"Station invalide. Veuillez choisir parmi : {', '.join([s.nom for s in ville.stations])}")
+            print(f"Station invalide. Veuillez choisir parmi : {', '.join(station_names)}")
 
     def show_history(self, history: List[Metrique]):
         print(f"{'Date':<25} | {'Température':>12} | {'Humidité':>9} | {'Pression':>8}")
-        for hist in history[-10:]:
-            print(f"{hist.date} | {hist.temperature:>10.1f}°C | {hist.humidite:>8}% | {hist.pression:>8} Pa")
+        
+        for metrique_data in history[-10:]:
+            displayable_metrique = MetriqueDisplayDecorator(metrique_data)
+            print(displayable_metrique.show())
 
     def ask_for_refresh(self) -> bool:
         print("-" * 40)
