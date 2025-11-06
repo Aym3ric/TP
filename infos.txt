@@ -1,0 +1,50 @@
+Société météo
+avoir une app pour suivre la météo toulousaine
+données météorologique : site ->https://data.toulouse-metropole.fr/explore/dataset/42-station-meteo-toulouse-parc-compans-cafarelli/information/
+- récupérer les données 
+- traiter les données 
+- afficher les données
+
+Données a garder : temperature / humidité / Pression
+pouvoir choisir la station de métro pour récupérer les données 
+avoir un histrique de la semaine 
+créer des modèles en objet en respectant le clean code
+pouvoir actualiser les donénes = > Faire un appel API 
+Nettoyer les données 
+et les afficher
+
+Classes à implémenter :
+ville 
+station
+metrique/releve
+dataextractor mère
+csvextractor fille
+transform
+nettoyage (si besoin) => vérif valeurs abérhante, ...
+load
+visualisation
+
+3interfaces:
+IDataExtractor => CsvExtractor / ApiExtractor, ...
+IDataTransformer => CleanErrorValues, CleanMissingValues, ...
+IDataLoader => DataLoader (pas utile dans notre cas visualiser plutot)
+
+EtlPipeline(=classe Application) (attributs = extrator, transformer, loader / run())
+DataVisualizer
+station
+metrique
+ville
+
+
+
+
+Application
+ExtractCsv
+IDataExtractor
+IDataTransformer
+Metrique
+Station
+Ville
+Visualizer 
+
+
