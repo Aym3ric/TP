@@ -1,3 +1,6 @@
+import sys
+import os
+
 from Application import Application
 from services.DataTransformer import DataTransformer
 from ui.Visualizer import Visualizer
@@ -8,4 +11,5 @@ if __name__ == "__main__":
     visualizer = Visualizer()
 
     app = Application(transformer, visualizer, STATIONS_CONFIG)
+    
     app.run()
