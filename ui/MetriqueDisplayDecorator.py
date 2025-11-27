@@ -1,5 +1,5 @@
 from IDisplayDecorator import IDisplayDecorator
-from Metrique import Metrique
+from models.Metrique import Metrique
 
 class MetriqueDisplayDecorator(IDisplayDecorator):
     

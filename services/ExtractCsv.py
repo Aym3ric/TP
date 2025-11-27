@@ -1,5 +1,5 @@
+from services.IDataExtractor import IDataExtractor
 import pandas as pd
-from IDataExtractor import IDataExtractor
 
 class ExtractCsv(IDataExtractor):
     def __init__(self, filepath: str, delimiter: str = ';'):

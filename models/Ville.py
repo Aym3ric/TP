@@ -1,4 +1,4 @@
-from Station import Station
+from models.Station import Station
 
 class Ville:
     def __init__(self, nom: str, stations: list[Station] = []) -> None:

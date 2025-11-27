@@ -1,61 +1,63 @@
-from IDataExtractor import IDataExtractor 
-from IDataTransformer import IDataTransformer 
-from Visualizer import Visualizer
-from ExtractCsv import ExtractCsv
-from Ville import Ville
-from Station import Station
-from typing import List
+from services.IDataTransformer import IDataTransformer 
+from ui.Visualizer import Visualizer
+from services.ExtractCsv import ExtractCsv
+from models.Station import Station
+from structures.LinkedList import LinkedList
+from structures.Maillon import Maillon
 
 class Application:
     
     def __init__(self, 
                  transformer: IDataTransformer, 
                  visualizer: Visualizer, 
-                 villes: List[Ville]):
+                 stations_config: dict): 
         
         self.transformer = transformer
         self.visualizer = visualizer
-        self.villes = villes 
-        self.extractor: IDataExtractor | None = None
+        self.stations_structure = LinkedList()
         
+        # Initialisation de la structure de données à partir du config
+        self._init_stations(stations_config)
+
+    def _init_stations(self, config: dict):
+        """Remplit la liste chaînée avec les stations et leurs chemins CSV."""
+        for nom_station, chemin_csv in config.items():
+            station = Station(nom_station)
+            
+            data = {
+                "station_obj": station,
+                "csv_path": chemin_csv
+            }
+            
+            self.stations_structure.add_maillon(Maillon(data))
+
     def run(self):
         try:
             print("--- Configuration de la recherche ---")
             
-            if not self.villes:
-                print("Erreur: Aucune ville n'est configurée dans l'application.")
-                return
-
-            type_extract = self.visualizer.choice_type_extract()
-            selected_ville: Ville = self.visualizer.choice_ville(self.villes)
-            selected_station: Station = self.visualizer.choice_station(selected_ville)
-
-            if type_extract == "csv":
-                file_name = f"{selected_station.nom.lower()}.csv" 
-                self.extractor = ExtractCsv(file_name)
-            else:
-                print(f"Type d'extracteur '{type_extract}' non géré.")
-                return
-        
-        except KeyboardInterrupt:
-            print("\nConfiguration annulée.")
-            return
+            items_a_traiter = self.stations_structure.to_list()
             
-        try:
-            while True:
-                print(f"\n--- Chargement des données pour {selected_station.nom} ---")
+            if not items_a_traiter:
+                print("Aucune station configurée.")
+                return
+
+            for item in items_a_traiter:
+                station: Station = item["station_obj"]
+                csv_path: str = item["csv_path"]
                 
-                df = self.extractor.extract() 
+                print(f"\n--- Chargement des données pour {station.nom} ---")
+                
+                extractor = ExtractCsv(csv_path)
+                df = extractor.extract() 
                 
                 if df.empty:
-                    print("Aucune donnée n'a été extraite (fichier vide ou non trouvé).")
+                    print("Aucune donnée n'a été extraite.")
+                    continue
                     
-                metriques = []
-                if not df.empty:
-                    metriques = self.transformer.transform(df)
+                metriques = self.transformer.transform(df)
                 
                 if not metriques:
-                    print("Aucune donnée valide n'a pu être transformée.")
+                    print("Aucune donnée valide transformée.")
                 else:
                     self.visualizer.show_history(metriques)
 

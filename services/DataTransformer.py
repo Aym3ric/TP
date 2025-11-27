@@ -1,7 +1,7 @@
 import pandas as pd
-from IDataTransformer import IDataTransformer
-from IDataMapper import IDataMapper # Import de la nouvelle interface
-from Metrique import Metrique
+from services import IDataMapper
+from services.IDataTransformer import IDataTransformer
+from models.Metrique import Metrique
 from typing import List
 
 class DataTransformer(IDataTransformer):

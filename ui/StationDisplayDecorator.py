@@ -1,5 +1,5 @@
 from IDisplayDecorator import IDisplayDecorator
-from Station import Station
+from models.Station import Station
 
 class StationDisplayDecorator(IDisplayDecorator):
     

@@ -1,4 +1,4 @@
-from Maillon import Maillon
+from structures.Maillon import Maillon
 
 class LinkedList:
     def __init__(self, first_maillon: Maillon = None):
@@ -41,3 +41,12 @@ class LinkedList:
                 courant.set_suiv(courant.get_suiv().get_suiv())
                 return
             courant = courant.get_suiv()
+
+    def to_list(self):
+            #Convertit la liste chaînée en liste Python standard pour l'itération facile
+            elements = []
+            courant = self.first_maillon
+            while courant is not None:
+                elements.append(courant.val)
+                courant = courant.get_suiv()
+            return elements

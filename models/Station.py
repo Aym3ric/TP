@@ -1,4 +1,4 @@
-from Metrique import Metrique 
+from models.Metrique import Metrique 
 from typing import List
 
 class Station:

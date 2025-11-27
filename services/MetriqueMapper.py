@@ -1,5 +1,5 @@
 from IDataMapper import IDataMapper
-from Metrique import Metrique
+from models.Metrique import Metrique
 import pandas as pd
 from typing import List
 

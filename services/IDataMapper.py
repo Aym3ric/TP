@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from Metrique import Metrique
+from models.Metrique import Metrique
 import pandas as pd
 from typing import List
 
