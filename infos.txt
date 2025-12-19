@@ -52,3 +52,5 @@ Faire une liste chainée pour afficher la météo station par station
 Faire une liste chainée pour extraire les données 
 Faire un dictionnaire comme fichier de configuration (nom station avec le chemin, ...)
 A la fin il faudra changé la liste chainée par une autre structure de donnée(file) donc il faut faire attention a ce que le code soit facilement modulable
+
+Ajouter une classe mere(Collection = interface) pour les structures (avec add, remove, get) et en fille LinkedList et File 

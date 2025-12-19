@@ -6,7 +6,7 @@ class ExtractCsv(IDataExtractor):
         self.filepath: str = filepath
         self.delimiter: str = delimiter
 
-    def extract(self) -> pd.DataFrame:
+    def execute(self) -> pd.DataFrame:
         try:
             df = pd.read_csv(self.filepath, delimiter=self.delimiter)
             return df
@@ -18,4 +18,6 @@ class ExtractCsv(IDataExtractor):
             return pd.DataFrame() 
         except Exception as e:
             print(f"Erreur inattendue lors de la lecture du CSV: {e}")
-            return pd.DataFrame() 
+            return pd.DataFrame()
+        
+# Command

@@ -1,18 +1,31 @@
 from structures.Maillon import Maillon
+from structures.Collection import Collection
 
-class File:
+class File(Collection):
     def __init__(self):
         self.tete = None  
         self.queue = None 
 
-    def est_vide(self):
+    def is_empty(self):
         return self.tete is None
 
-    def enfiler(self, data):
-        """Ajoute un élément à la fin de la file."""
-        nouveau = Maillon(data)
+    def add(self, item):
+        # Enfiler
+        self.enfiler(item)
+
+    def remove(self, item=None):
+        # Defiler (FIFO)
+        return self.defiler()
         
-        if self.est_vide():
+    def get(self):
+        return self.tete.val if self.tete else None
+
+    def est_vide(self):
+        return self.is_empty()
+
+    def enfiler(self, data):
+        nouveau = Maillon(data)
+        if self.is_empty():
             self.tete = nouveau
             self.queue = nouveau
         else:
@@ -20,17 +33,14 @@ class File:
             self.queue = nouveau
 
     def defiler(self):
-        """Retire et retourne l'élément en tête de file (FIFO)."""
-        if self.est_vide():
+        if self.is_empty():
             return None
         
         maillon_tete = self.tete
         valeur = maillon_tete.val
         
-        # La tête avance au suivant
         self.tete = maillon_tete.get_suiv()
         
-        # Si la file devient vide, on nettoie la queue aussi
         if self.tete is None:
             self.queue = None
             
