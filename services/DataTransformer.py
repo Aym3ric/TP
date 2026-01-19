@@ -1,5 +1,5 @@
 import pandas as pd
-from services import IDataMapper
+from services.IDataMapper import IDataMapper
 from services.IDataTransformer import IDataTransformer
 from models.Metrique import Metrique
 from typing import List

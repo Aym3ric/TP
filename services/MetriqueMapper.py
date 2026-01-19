@@ -1,4 +1,4 @@
-from IDataMapper import IDataMapper
+from services.IDataMapper import IDataMapper
 from models.Metrique import Metrique
 import pandas as pd
 from typing import List

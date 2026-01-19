@@ -40,7 +40,7 @@ class Application:
 
     def run(self):
         try:
-            print("\n=== PHASE 1 : EXTRACTION DES DONNÉES (FILE) ===")
+            print("\n=== PHASE 1 : EXTRACTION DES DONNEES ===")
             
             while not self.file_extraction.est_vide():
                 task = self.file_extraction.defiler()
@@ -50,7 +50,7 @@ class Application:
                 print(f"Traitement en cours : {nom_station}...")
                 
                 extractor = ExtractCsv(csv_path) #
-                df = extractor.extract()
+                df = extractor.execute()
                 
                 if df.empty:
                     print(f"  -> Avertissement : Pas de données pour {nom_station}")
@@ -70,9 +70,9 @@ class Application:
                     print("  -> Erreur : Aucune métrique valide transformée.")
 
             
-            print("\n=== PHASE 2 : VISUALISATION (LISTE CHAÎNÉE) ===")
+            print("\n=== PHASE 2 : VISUALISATION ===")
             
-            if self.liste_resultats.est_vide(): #
+            if self.liste_resultats.is_empty():
                 print("Aucune station disponible à l'affichage.")
                 return
 
@@ -81,8 +81,8 @@ class Application:
             while courant is not None:
                 station_actuelle: Station = courant.val
                 
-                print(f"\n--- MÉTÉO POUR : {station_actuelle.nom} ---")
-                self.visualizer.show_history(station_actuelle.metriques) #
+                print(f"\n--- METEO POUR : {station_actuelle.nom} ---")
+                self.visualizer.show_history(station_actuelle.metriques)
                 
                 if courant.get_suiv() is not None:
                     choix = input("\n[Entrée] Station suivante | [Q] Quitter : ").strip().lower()

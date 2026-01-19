@@ -2,8 +2,8 @@ from models.Metrique import Metrique
 from typing import List
 from models.Ville import Ville
 from models.Station import Station
-from MetriqueDisplayDecorator import MetriqueDisplayDecorator
-from StationDisplayDecorator import StationDisplayDecorator
+from ui.MetriqueDisplayDecorator import MetriqueDisplayDecorator
+from ui.StationDisplayDecorator import StationDisplayDecorator
 
 class Visualizer:
     def __init__(self):
