@@ -1,11 +1,10 @@
-import sys
-import os
 
-from Application import Application
-from services.DataTransformer import DataTransformer
-from ui.Visualizer import Visualizer
-from Config import Configuration
-from services.MetriqueMapper import MetriqueMapper
+
+from application import Application
+from services.data_transformer import DataTransformer
+from ui.visualizer import Visualizer
+from config import Configuration
+from services.metrique_mapper import MetriqueMapper
 
 if __name__ == "__main__":
     mapper = MetriqueMapper()
@@ -15,5 +14,5 @@ if __name__ == "__main__":
     # Récupération de la configuration via le Singleton
     config = Configuration().get_all()
     app = Application(transformer, visualizer, config)
-    
+
     app.run()

@@ -1,52 +1,81 @@
-from models.Metrique import Metrique 
+"""
+Module gérant les interactions avec l'utilisateur (Entrées/Sorties).
+"""
 from typing import List
-from models.Ville import Ville
-from models.Station import Station
-from ui.MetriqueDisplayDecorator import MetriqueDisplayDecorator
-from ui.StationDisplayDecorator import StationDisplayDecorator
+from models.metrique import Metrique
+from models.ville import Ville
+from models.station import Station
+from ui.metrique_display_decorator import MetriqueDisplayDecorator
 
 class Visualizer:
+    """
+    Classe utilitaire pour l'affichage console et la saisie utilisateur.
+    """
     def __init__(self):
-        pass
+        """Initialise le visualiseur."""
 
     def choice_type_extract(self) -> str:
+        """Demande à l'utilisateur de choisir le type d'extraction (CSV ou API)."""
         print("-> CSV")
+        print("-> API")
         while True:
-            response = input("Type d'extraction : ").lower()
-            if response == 'csv':
-                 return response
+            response = input("Type d'extraction (csv/api) : ").lower()
+            if response in ['csv', 'api']:
+                return response
+            print("Choix invalide.")
 
     def choice_ville(self, villes: List[Ville]) -> Ville:
+        """Affiche les villes disponibles et demande à l'utilisateur d'en choisir une."""
         available_names = {v.nom.lower(): v for v in villes}
-        
+
         print(f"Villes disponibles: {', '.join([v.nom for v in villes])}")
-        
+
         while True:
             response = input("Ville : ").lower()
             if response in available_names:
-                 return available_names[response]
+                return available_names[response]
             print(f"Ville invalide. Veuillez choisir parmi : {', '.join([v.nom for v in villes])}")
 
-    def choice_station(self, ville: Ville) -> Station:
+    def choice_station(self, ville: Ville) -> List[Station]:
+        """Affiche les stations d'une ville et demande à l'utilisateur d'en sélectionner."""
         available_names = {s.nom.lower(): s for s in ville.stations}
-        
-        station_names = [StationDisplayDecorator(s).show() for s in ville.stations]
+
+        station_names = [s.nom for s in ville.stations]
         print(f"Stations disponibles pour {ville.nom}: {', '.join(station_names)}")
 
         while True:
-            response = input("Station : ").lower()
-            if response in available_names:
-                return available_names[response]
-            print(f"Station invalide. Veuillez choisir parmi : {', '.join(station_names)}")
+            response = input("Station(s) (séparées par des virgules) : ").lower()
+            requested_names = [name.strip() for name in response.split(',') if name.strip()]
+
+            selected_stations = []
+            invalid_found = False
+
+            if not requested_names:
+                print("Veuillez entrer au moins un nom de station.")
+                continue
+
+            for name in requested_names:
+                if name in available_names:
+                    selected_stations.append(available_names[name])
+                else:
+                    print(f"Station inconnu : {name}")
+                    invalid_found = True
+
+            if not invalid_found:
+                return selected_stations
+
+            print(f"Veuillez choisir parmi : {', '.join(station_names)}")
 
     def show_history(self, history: List[Metrique]):
+        """Affiche l'historique des métriques (utilise MetriqueDisplayDecorator)."""
         print(f"{'Date':<25} | {'Température':>12} | {'Humidité':>9} | {'Pression':>8}")
-        
+
         for metrique_data in history[-10:]:
             displayable_metrique = MetriqueDisplayDecorator(metrique_data)
             print(displayable_metrique.show())
 
     def ask_for_refresh(self) -> bool:
+        """Demande à l'utilisateur s'il souhaite rafraîchir les données."""
         print("-" * 40)
         while True:
             response = input("Voulez-vous rafraîchir les données ? (o/n) : ").lower().strip()
