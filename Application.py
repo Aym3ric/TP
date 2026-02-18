@@ -1,15 +1,15 @@
 """
 Point d'entrée principal de la logique applicative.
 """
-from services.i_data_transformer import IDataTransformer
-from ui.visualizer import Visualizer
-from services.extract_csv import ExtractCsv
-from services.extract_api import ExtractApi
 from models.station import Station
 from models.ville import Ville
-from structures.linked_list import LinkedList
+from services.extract_api import ExtractApi
+from services.extract_csv import ExtractCsv
+from services.i_data_transformer import IDataTransformer
 from structures.file_structure import File
+from structures.linked_list import LinkedList
 from ui.station_display_decorator import StationDisplayDecorator
+from ui.visualizer import Visualizer
 
 class Application:
     """
@@ -82,7 +82,9 @@ class Application:
                     # Transformation
                     metriques = self.transformer.transform(df)
                     if metriques:
-                        station.metriques = metriques
+                        station.metriques = []
+                        for m in metriques:
+                            station.add_metrique(m)
                         print(f"  -> Succès : {len(metriques)} métriques chargées.")
                     else:
                         print(f"  -> Attention : Aucune métrique valide transformée pour {station.nom}")

@@ -1,0 +1,7 @@
+services:
+  app:
+    build: .
+    container_name: tp-meteo
+    # stdin_open + tty permettent l'interaction console (input())
+    stdin_open: true
+    tty: true

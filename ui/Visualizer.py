@@ -2,10 +2,8 @@
 Module gérant les interactions avec l'utilisateur (Entrées/Sorties).
 """
 from typing import List
-from models.metrique import Metrique
 from models.ville import Ville
 from models.station import Station
-from ui.metrique_display_decorator import MetriqueDisplayDecorator
 
 class Visualizer:
     """
@@ -64,23 +62,5 @@ class Visualizer:
             if not invalid_found:
                 return selected_stations
 
+
             print(f"Veuillez choisir parmi : {', '.join(station_names)}")
-
-    def show_history(self, history: List[Metrique]):
-        """Affiche l'historique des métriques (utilise MetriqueDisplayDecorator)."""
-        print(f"{'Date':<25} | {'Température':>12} | {'Humidité':>9} | {'Pression':>8}")
-
-        for metrique_data in history[-10:]:
-            displayable_metrique = MetriqueDisplayDecorator(metrique_data)
-            print(displayable_metrique.show())
-
-    def ask_for_refresh(self) -> bool:
-        """Demande à l'utilisateur s'il souhaite rafraîchir les données."""
-        print("-" * 40)
-        while True:
-            response = input("Voulez-vous rafraîchir les données ? (o/n) : ").lower().strip()
-            if response == 'o':
-                return True
-            if response == 'n':
-                return False
-            print("Réponse invalide. Veuillez entrer 'o' pour oui ou 'n' pour non.")

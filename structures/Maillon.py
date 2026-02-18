@@ -11,14 +11,6 @@ class Maillon:
         self.val = val
         self.suiv = None
 
-    def est_vide(self):
-        """Retourne True si le maillon n'a pas de valeur ni de suivant."""
-        return self.val is None and self.suiv is None
-
-    def get_value(self):
-        """Retourne la valeur stockée dans le maillon."""
-        return self.val
-
     def get_suiv(self):
         """Retourne le maillon suivant."""
         return self.suiv

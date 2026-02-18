@@ -1,30 +1,42 @@
 """
-Module d'extraction de données depuis une API (format CSV).
+Module d'extraction de données depuis une API (format JSON).
 """
 import pandas as pd
+import requests
 from services.i_data_extractor import IDataExtractor
 
 class ExtractApi(IDataExtractor):
     """
-    Implémentation de l'extraction de données depuis une API exposant un CSV.
+    Implémentation de l'extraction de données depuis une API JSON.
     """
     def __init__(self, url: str):
         """Initialise avec l'URL de l'API."""
         self.url = url
 
     def execute(self) -> pd.DataFrame:
-        """Exécute la requête HTTP (via pandas) et retourne un DataFrame."""
+        """Exécute la requête HTTP et retourne un DataFrame."""
         try:
-            print(f"Connexion à l'API (CSV) : {self.url} ...")
-            df = pd.read_csv(self.url, delimiter=';')
+            print(f"Connexion à l'API : {self.url} ...")
+            response = requests.get(self.url, timeout=15)
+            response.raise_for_status()
 
-            df.columns = df.columns.str.strip().str.replace(r'^\ufeff', '', regex=True).str.lower()
+            data = response.json()
 
-            print(f"Colonnes reçues : {df.columns.tolist()}")
+            if 'results' in data and isinstance(data['results'], list):
+                df = pd.DataFrame(data['results'])
+            elif isinstance(data, list):
+                df = pd.DataFrame(data)
+            else:
+                print("Format JSON inattendu.")
+                return pd.DataFrame()
+
+            if df.empty:
+                return df
+
+            df.columns = df.columns.str.strip().str.lower()
 
             selected_cols = self._identify_columns(df.columns)
 
-            # On ne garde que les colonnes identifiées pour éviter les conflits
             if not selected_cols:
                 print("Attention: Aucune colonne météo identifiée.")
                 return pd.DataFrame()
@@ -34,8 +46,8 @@ class ExtractApi(IDataExtractor):
 
             return df
 
-        except Exception as e: 
-            print(f"Erreur lors de l'extraction API CSV : {e}")
+        except Exception as e:
+            print(f"Erreur lors de l'extraction API : {e}")
             return pd.DataFrame()
 
     def _identify_columns(self, columns):

@@ -7,6 +7,7 @@ class Configuration:
     Classe Singleton gérant la configuration globale de l'application.
     """
     instance = None
+    config = None
 
     def __new__(cls):
         """Crée ou retourne l'instance unique de Configuration."""
@@ -16,11 +17,11 @@ class Configuration:
             cls.instance.config = {
                 "Compans Cafarelli": {
                     "csv": "data/compans cafarelli.csv",
-                    "api": "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets/42-station-meteo-toulouse-parc-compans-cafarelli/exports/csv?lang=fr&timezone=UTC&use_labels=false&delimiter=%3B"
+                    "api": "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets/42-station-meteo-toulouse-parc-compans-cafarelli/records?order_by=heure_utc%20desc&limit=10"
                 },
                 "Carmes": {
                     "csv": "data/carmes.csv",
-                    "api": "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets/28-station-meteo-toulouse-carmes/exports/csv?lang=fr&timezone=UTC&use_labels=false&delimiter=%3B"
+                    "api": "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets/28-station-meteo-toulouse-carmes/records?order_by=heure_utc%20desc&limit=10"
                 }
             }
         return cls.instance
