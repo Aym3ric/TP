@@ -148,4 +148,4 @@ class Application:
         except KeyboardInterrupt:
             print("\nApplication interrompue.")
         finally:
-            print("Au revoir !")
+            print("Au revoir !!")
